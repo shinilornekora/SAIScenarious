@@ -1,3 +1,4 @@
+from scenarious.approx_scenario import startApproxScenario
 from scenarious.noised_scenario import startNoisyScenario
 from scenarious.usual_scenario import startUsualScenario
 
@@ -15,6 +16,8 @@ def startCommonScenario():
             continue
 
         break
+
+    startApproxScenario()
     print("Program was closed successfully.")
 
 startCommonScenario()

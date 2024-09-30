@@ -1,7 +1,12 @@
 from matplotlib import pyplot as plt
-import numpy as np
+import random
 
-from .helpers import mainFormula
+def mainFormula(theta1, x, y):
+    J = 0
+    for i in range(len(x)):
+        J += (theta1 * x[i] - y[i]) ** 2
+    return J
+
 
 def startDrawScenario(theta1_values, J_values_noisy, theta1_min_noisy):
     plt.plot(theta1_values, J_values_noisy, label="С шумом")
@@ -13,24 +18,31 @@ def startDrawScenario(theta1_values, J_values_noisy, theta1_min_noisy):
     plt.grid(True)
     plt.show()
 
+
 def startCalcScenario():
-    x = np.arange(1, 21)
+    x = list(range(1, 21))
     y = x
 
-    theta_1_values = np.linspace(0, 2, 100)
-    noise = np.random.uniform(-2, 2, size=y.shape)
-    y_noisy = y + noise
+    theta_1_values = [i / 50 for i in range(101)]
+    
+    random.seed(42)
+    noise = [random.uniform(-2, 2) for _ in range(len(y))]
+    y_noisy = [y[i] + noise[i] for i in range(len(y))]
 
-    J_values_noisy = np.array([mainFormula(theta1, x, y_noisy) for theta1 in theta_1_values])
+    J_values_noisy = [mainFormula(theta1, x, y_noisy) for theta1 in theta_1_values]
 
-    theta1_min_noisy = theta_1_values[np.argmin(J_values_noisy)]
+    min_J = J_values_noisy[0]
+    theta1_min_noisy = theta_1_values[0]
+    for i in range(1, len(J_values_noisy)):
+        if J_values_noisy[i] < min_J:
+            min_J = J_values_noisy[i]
+            theta1_min_noisy = theta_1_values[i]
 
-    return [theta_1_values, J_values_noisy, theta1_min_noisy]
+    return theta_1_values, J_values_noisy, theta1_min_noisy
 
 
 def startNoisyScenario():
     print("Starting the noisy scenario...\n")
-    
     print("Starting the calculation scenario...\n")
     theta_1_values, J_values_noisy, theta1_min_noisy = startCalcScenario()
     print("Successfully ended calculation scenario.")
@@ -40,3 +52,4 @@ def startNoisyScenario():
     print("Successfully ended drawing scenario.")
 
     print("Ended the noisy scenario.")
+

@@ -1,7 +1,6 @@
 from matplotlib import pyplot as plt
-import numpy as np
-
 from .helpers import mainFormula
+
 
 def startDrawScenario(theta1_values, J_values, theta1_min):
     plt.plot(theta1_values, J_values, label="Без шума")
@@ -13,20 +12,26 @@ def startDrawScenario(theta1_values, J_values, theta1_min):
     plt.grid(True)
     plt.show()
 
+
 def startCalcScenario():
-    x = np.arange(1, 21)
+    x = list(range(1, 21))
     y = x
 
-    theta_1_values = np.linspace(0, 2, 100)
-    J_values = np.array([mainFormula(theta1, x, y) for theta1 in theta_1_values])
-    theta_1_min = theta_1_values[np.argmin(J_values)]
+    theta_1_values = [i / 50 for i in range(101)]
+    J_values = [mainFormula(theta1, x, y) for theta1 in theta_1_values]
 
-    return [theta_1_values, J_values, theta_1_min]
+    min_J = J_values[0]
+    theta1_min = theta_1_values[0]
+    for i in range(1, len(J_values)):
+        if J_values[i] < min_J:
+            min_J = J_values[i]
+            theta1_min = theta_1_values[i]
+
+    return theta_1_values, J_values, theta1_min
 
 
 def startUsualScenario():
     print("Starting the usual scenario...\n")
-    
     print("Starting the calculation scenario...\n")
     theta_1_values, J_values, theta_1_min = startCalcScenario()
     print("Successfully ended calculation scenario.")
@@ -34,6 +39,6 @@ def startUsualScenario():
     print("Starting the drawing scenario...\n")
     startDrawScenario(theta1_values=theta_1_values, J_values=J_values, theta1_min=theta_1_min)
     print("Successfully ended drawing scenario.")
-    
+
     print("Ended the usual scenario.")
 
